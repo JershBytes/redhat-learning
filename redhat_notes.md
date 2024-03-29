@@ -1,0 +1,254 @@
+# Table of Contents
+ - [Manage Files from the Command Line](#chapter-3)
+ - [Man Pages](#chapter-4) 
+ - [Create, View, and Edit Text Files](#chapter-5)
+ - [Manage Local Users and Groups](#chapter-6)
+ - [Control Access to Files](#chapter-7)
+ - [Monitor and Manage Linux Processes](#chapter-8)
+ - [Control Services and Daemons](#chapter-9)
+
+# Chapter-3
+### Hard Links 
+can only linke files on the same FS. They canot link dir's that can be done via a hard link or symbolic link other wise know as a symlink.
+
+example of a symlink would be `ln -s dir / dir` from there you can verify if they have the same inode by running a simple `ls -ldi dir / dir/`
+
+Sym link will be colorized in the shell to show they are sym link. If you delete the folder that the link is linked to that will result in a broken symlink. Correct process would be to unlink said folder then delete the folder so no broken links exsist.
+
+### Matching File names with Shell Expansions
+
+To make your job easier you can using shell expansions to get more work done out of a sinlge command example being creating dirs and its subfolders.
+
+for an example running a command like `mkdir -pv /vhosts/www.{ansible,openshift,redhat}.com/{html,cgi-bin}/`
+
+`mkdir -p` Creates the dir's but using the pathhs the `-v` flag shows the output. From their you can then specify what folders are being created and also put in a `/` to break down into another in another so dir so the second cert of curly braces can specify another set of folders. To verify if it was done correctly we can do a `tree -F /vHosts` for this example to see if the folders were created correctly.
+
+### Using Shell Expansions to create files also renaming them.
+This can also be done if you want to create files e.g `touch {index,info,insights}.file`
+we can then run a `ls -l` to verify the files were created correctly with the right file extenison.
+
+If you do happen to mess up a file extension we can do a `rename .file .log *` and that will rename the files in that dir. This is just an example. 
+
+### Creating Files using a sequential range
+
+You can also make folders or files using a rang in the case of RHEL having multiple versions.
+
+E.g being `mkdir -pv RHEL{6..9}`
+How the command works is mkdir makes the dir's `-p` does it as a path in the current dir unless specified then the `{6..9}` is the range in which the folders are made.
+
+### Some other examples could be using to finding files  or moving around
+
+e.g being 
+`ls f*` -- would grab anthing that start with f.
+`ls f????` -- does the same thing but anything with f and 4 characters after that f.
+
+# Chapter-4
+
+
+Section 1 -- is user commands
+Section 5 -- config files
+Section 8 is admin command and daemons
+
+E.g of using the command would be `man -k crontab` , like all commands args needs to be specified.
+commands can be part of multiple sections
+
+`export LESS='-X'`
+ IF you want to access the section of a manpage file an easy way to that would be E.g `man 5 crontab` that `man` being the command and then `5` being the section and then in this case `crontab` being the command you want the info on lets you look at section 5 of that particluar command.
+ 
+## Fun Note
+When running a whereis on a command E.g `whereis man` you can get info on where the file is located but also where the man pages are located.
+
+`man -k` does a search. E.g if you run `man -k boot` it will show you all the commands that commaands that can be passed through at bootime.
+
+# Chapter-5 
+
+ 
+### Redirect Output to a File or Program
+
+```
+0 --> stdin --> Keyboard
+1 --> stdout --> Monitor
+2 --> stderr --> Monitor
+```
+
+`<` -- is the redirector for standard output.
+`>` -- Send the output of a command to a file
+`>>` -- Send the error messages else where E.g another file or a log.
+
+`|` -- output of command 1 is inserted into command 2 E.g `dnf search | grep -E mysql`
+
+When using the `>` it will overwrite any exsisitg content. <strong> be safe when using this</strong>
+
+`\n` -- <strong> Starts a new line! </strong>
+
+`top -b -n 1` -- Starts top in batch mode with just a sinlge itteration!
+
+`hostnamectl | tee my_system` -- This is an example of pritning the output of a command and throwing it into it another file. <strong> `tee` will overwrite any conent in the file. a `-a` can be addded to append the already used file.</strong> 
+
+`2>/dev/null` -- this throw error messages into `/dev/null` which ignores the messages on the put. E.g of the command being used `find / -size +100M 2>/dev/null`
+
+using `EOF` an easy to way script example adding a repo file to the repost list can be done using `EOF` small example would be `cat > my file <<EOF then ending with <EOF` this will copy the data inbetween the EOF and throw it into that file.
+
+## Edit Text Files from the Shell Prompt
+### Vim 
+If you have started vim and not specified a file name bnefore hand E.g `vim /var/tmp/aboutme` you can do a `:w /var/tmp/aboutme` to save that file to that location.
+
+### These Commands are done in command mode or default mode 
+`yy` --> to copy a line.
+`p` --> to paste said line.
+---
+If you want to paste the same line multiple time to make an edit easier. you can do a `yy` to copy or `yank` the line then do a `10p`. This will paste the line you copy or yanked 10 times.
+
+`dw` --> willV delete the word you are on top of.
+`x` --> will delete the letter it is on top of.
+`d$` --> will delete from where cursor is to end of the line.
+
+`Visual Line Mode` --> you can look at the file frim a visual perspective and from there you can use somne commands to copy , paste or delete.
+`Visual Block Mode` --> Same as above but by block instead of the whole line. Good for wanting editing first parts of a line.
+`vimturor` --> opens an interactive tutorial on how to use vim!
+`G` --> Goes to end of the file.
+
+## Change the Shell Enviroment
+
+`/etc/profile` --> login script for all shells for all users
+`~/.profile` --> login script for all shells (user specific)
+`/etc/bashrc` --> login script for the bash shell for all users
+`~/.bashrc` --> login sccript for bash (user specific)
+
+```bash
+HISTFILESIZE=10000 #(10K Lines for bash History) 
+HISTTIMEFORMAT="%G %T " #(Time stamps when command was ran.) 
+alias sc="grep ^[^#] $1" #(strips comments from file.) 
+
+mcd () {
+    mkdir -pv $1 && cd $1
+} # This function will create a dir and then change into it. 
+
+export  EDITOR=/usr/bin/vim #(Changes the default editor to vim or whatever you specify as.)
+```
+
+# Chapter-6
+ 
+`Processes` --> Process ID's (PIDs)
+`Users` --> User ID's (UIDs)
+`Groups` --> Group ID's (GIDs)
+`Files` --> index nodes (inodes)
+
+You can use a `id`. This will tell you the `uid`,`gid` and other information.
+
+### Manage Local User Accounts
+when doing a `useradd` the id created is the next aviablable id starting after 1000. E.g being `useradd jersh` as long as their are no other accounts would be given the id of `1001`.
+
+`usermod -c` --> changes the comment feild for said user E.g being `usermod -c "Joshua Ross" jersh` would change the comment for the jersh user to Joshua Ross.
+
+`id` --> wil give you the groups that said user s in?
+
+`usermod -G wheel` --> will add said user to the wheel group as a sup group. This will overwrite the current sup group if you want to add it as well ekeep the other you can do a `usermod -aG wheel` to add the wheel group to that user along with the other groups.
+
+`userdel -r $USER` --> This will delete the user along with the homedir.
+
+### Manage Local Groups
+
+`getent` --> Get's group information.
+
+### Manage User Passwords
+user accoutnt info --> `/etc/passwd`
+group account info --> `/etc/group`
+password info --> `/etc/shadow`
+
+# Chapter-7
+### Interpert Linux File System Permissions 
+
+There are 6 types of Permissions.
+
+first bit is the `file tpye`
+second bit is `owning user`
+second but is `owning group`
+third bit is `other` <br>
+
+`chown` for change user
+`chgrrp` for changing group.
+
+E.g for a dir would be 
+`drwxr-x---` this would give the permissions that wonly the owning user can `rwx` to dir and thr group can do a `rx` not write.
+
+---
+
+`sticky bit` <-- dir's only
+only the owning user can delete  a file from a dir. E.g  of setting a sticky bit would be `chmod 1770 /data`. the permssions would then look like `rwxrwx--T`.The `T` meaning the sticky bit has been Set. <br>
+`chmod o+t` or `chmod  1 NNN`
+identified in permissiosn for others.
+
+---
+
+`SetGID` bit <-- files and dir's
+-  the owning group of a newly created file is derived from the dir that hte file is created in (for dirs)
+-  executables run with permissions of the owning group of the executable (for files)
+- `chmod g+s /dir` or `chmod 2 NNN /dir`. `NNN` is the meaning of the rwx permissions.
+-  `chmod g+s /file` or `chmod 2 NNN /file`.
+- identified in permissions for owning grpup. <br>
+  - E.g of this being used like above would be `chmod 2770 /data`<br>
+    this can alos be used as `chmod 3770 /data`.(this will set the sticky bit and the GID)
+
+---
+
+`SetUID` <-- files only
+-  executables run with permissions of the owning user of the executable.
+- `chmod u+s /file` or `chmod 4NNN` 
+- identified by permissions for owning user.
+
+You can set a `umask`` either at a system level or a user level. It just needs to be set in the `.bashrc` or `/etc/bashrc`.
+
+
+# Chapter-8
+### Process States and Lifecycle
+
+Any process can create a child process the same with goes with a child process it as well can create a child process. Something to be noted all child Processes would be desendents of the parent process.
+
+`pstree` will show you the process tree of the current system. Something to be noted as well `systemd` is the top parent process. <br>
+
+with Processes one is usually running and one is runnable or queued up.
+
+`sleeping state` --> States that are waiting for it to be called E.g a web server will often be in a sleeping state untill a connection is made.
+
+`zombie process` --> when a process is killed off and all reosurces are returned besides the `PID`. The system will then label this as a zombie process untill it is killed off.
+
+--- 
+you can use the `ps` command to show the running Processes. E.g you can do a `ps aux | grep bash` to see any instances of bash running.
+
+### ps indicators
+
+`I` = Process is idle
+`S` = Process is sleeping
+`Z` = zombie process , task was killed off but the `pid` was not returned.
+`R` = Running, the process is runing and actively getting CPU cyles
+`T` =  The process is defined but has been stopped from getting cpu cyles.
+
+### Control Jobs
+
+You can run Processes in the background by doing a `process &` this will start the process but then keep it running in the background so its possible to run othher commands or process will the initial one is still running. <br>
+
+if you need to check what jobs you have running you can issue a `jobs` command to get get a list of all the jobs that are running and then if you need to bring it to the foreground you can issue a `fg %1` to bring it to the foreground.<br>
+
+  if you need stop a process you can issue a `^Z` or `CTRL + Z`to stop the process. If you would like to send it to to the background all you need to do is a `bg %1` to send it to the background.
+
+
+#### Load Average
+To determine the load you can take the number given to you by lets says `uptime` divide it by the number of CPU's to get how much it is either underload or overloaded.<br>
+
+to kill a process , their are many ways to see the options you can do a `kill -l` to see the options.
+
+when killing a process if you do not specify an option the default use is `SIGTERM`. <br>
+
+A way to kill of a process if you don't know what it's pid is to do a `pidof` the process. this will then give you the pid and then from their you can a do a `kill pid` to kill of the process. Reminder that when doing this without options this will only stop the process and not kill it off. unless it is able to actually kill of the process.
+
+`top` --> The command will show you the load of the CPU , but also the uptime of the server. A more modern verison of this command is called `htop`. <br>
+A Reminder for killing of the process is if not specified it will auto perform a `kill -15` or also known as `SIGTERM` which is a graceful shutdown.
+
+When in the top command if you hit `k` then type in the `pid` it will kill off that process.
+
+# Chapter-9
+### Control Services and daemons
+Redhat as of RHEL 7 has switched over to `systemd` from `init`<br>
+The command used to control **Systemd** is `systemctl`. <br>
+
