@@ -1,4 +1,4 @@
-# Terraform Notes <!-- omit from toc -->
+<h1> <p align="center">Terraform Notes</p> </h1>
 
 # :link: Table of Contents <!-- omit from toc -->
 + [Module 3](#%6D%6F%64%75%6C%65%2D%33)
