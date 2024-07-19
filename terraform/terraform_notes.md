@@ -4,6 +4,8 @@
 + [Module 3](#%6D%6F%64%75%6C%65%2D%33)
   + [Overview](#%6F%76%65%72%76%69%65%77)
   + [Installation](#%69%6E%73%74%61%6C%6C%61%74%69%6F%6E)
+  + [Terraform Object Types](#%74%65%72%72%61%66%6F%72%6D%2D%6F%62%6A%65%63%74%2D%74%79%70%65%73)
+  + [Block Syntax](#%62%6C%6F%63%6B%2D%73%79%6E%74%61%78)
 
 
 ## Module 3
@@ -53,6 +55,40 @@ sudo yum -y install terraform
 ```
 </details>
 </details>
+
+After installing Terraform it is a good idea to check the version. this can be done with a simple
+```
+$ tf version
+Terraform v1.9.2
+on linux_amd64
+```
+The output should look something like this. 
+
+### Terraform Object Types
+- Providers
+- Resources
+- Data sources
+  
+### Block Syntax
+> [!NOTE]
+> Terraform uses block type syntax below is an example
+
+-  **main.tf**
+```tf
+ resource "aws_instance" "web_server" {
+    name = "web-server"
+    ebs_volume {
+        size = 40
+    }
+ }
+ ```
+
+- Terraform Object Refrence
+```tf
+aws_instance.web_server.name
+```
+
+
 
 
 
