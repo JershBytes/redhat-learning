@@ -9,12 +9,3 @@
 
 Welcome to the documentation notes repository for my Red Hat classes. This repository contains notes, tips, and resources that I have compiled during my Red Hat training sessions. These notes are intended for personal reference and study.
 
-## Contents
-
-- `notes/` - Detailed notes on various Red Hat topics covered in the classes.
-- `resources/` - Additional resources, links, and reference materials.
-- `examples/` - Code snippets and examples used during the training.
-- `guides/` - Step-by-step guides and procedures for different tasks.
-
-
-
