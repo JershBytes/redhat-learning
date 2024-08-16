@@ -9,7 +9,7 @@
 
 Welcome to the documentation notes repository for my Red Hat classes. This repository contains notes, tips, and resources that I have compiled during my Red Hat training sessions. These notes are intended for personal reference and study.
 
-# Contents
+# :link: Contents
 
 [Red Hat Certified System Administrator](/rhcsa/)
 
