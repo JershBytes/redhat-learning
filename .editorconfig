@@ -1,0 +1,50 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Root EditorConfig file
+root = true
+
+# Global settings, apply to all file types if not overridden
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown files
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# Shell scripts and bash files
+[*.sh]
+indent_style = space
+indent_size = 4
+
+# JavaScript files
+[*.js]
+indent_style = space
+indent_size = 2
+
+# CSS files
+[*.css]
+indent_style = space
+indent_size = 2
+
+# HTML files
+[*.html]
+indent_style = tab
+tab_width = 4
+
+# Terraform files
+[*.tf]
+indent_style = space
+indent_size = 2
+
+# Ansible YAML files
+[*.yml]
+indent_style = space
+indent_size = 2
